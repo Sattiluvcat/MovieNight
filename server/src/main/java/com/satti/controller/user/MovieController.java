@@ -12,7 +12,9 @@ import com.satti.result.Result;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user/movie")
@@ -31,11 +33,8 @@ public class MovieController {
 
     // 4th: 用户登录后记录信息
     @PostMapping("/login")
-    public Result login(@RequestParam String nickname, @RequestParam String title,
-                        @RequestParam String contact, HttpSession session) {
-        log.info("NEW USER! their nickname: {}, title: {}, contact: {}", nickname, title, contact);
-        UserInfo userInfo = UserInfo.builder()
-                .nickname(nickname).title(title).contact(contact).build();
+    public Result login(@RequestBody UserInfo userInfo, HttpSession session) {
+        log.info("NEW USER! their nickname: {}, title: {}, contact: {}", userInfo.getNickname(), userInfo.getTitle(), userInfo.getContact());
         session.setAttribute("userInfo", userInfo);
         return Result.success();
     }
@@ -55,26 +54,26 @@ public class MovieController {
     // 0th: 电影模糊搜索
     @GetMapping("/search")
     public Result<List<MovieRow>> searchMovies(@RequestParam String keyword){
+        log.info("searching movies with keyword: {}", keyword);
         List<MovieRow> movieRows =movieService.searchMovies(keyword);
         return Result.success(movieRows);
     }
 
     // 分类与语言同时搜索
     @GetMapping("/categorySearch")
-    public Result<List<MovieRow>> categorySearch(@RequestParam(required = false) String[] tags,
-                                                 @RequestParam(required = false) String[] languages) {
-        // 处理中文编码问题 此处解码
-        if (tags != null) {
-            for (int i = 0; i < tags.length; i++) {
-                tags[i] = java.net.URLDecoder.decode(tags[i], StandardCharsets.UTF_8);
-            }
-        }
-        if (languages != null) {
-            for (int i = 0; i < languages.length; i++) {
-                languages[i] = java.net.URLDecoder.decode(languages[i], StandardCharsets.UTF_8);
-            }
-        }
-        List<MovieRow> movieRows = movieService.categorySearch(tags, languages);
+    public Result<List<MovieRow>> categorySearch(@RequestParam String tags,
+                                                 @RequestParam String languages) {
+        // 处理中文编码问题 此处解码 其实可以不解码 调试的时候解码
+        log.info("searching movies with tags: {}, languages: {}", tags, languages);
+        String[] tagList = null;
+        String[] languageList = null;
+        // 此处不能直接split(",") 会造成空字符串问题（length!=0）
+        if(tags!=null&& !tags.isEmpty())
+            tagList = tags.split(",").clone();
+        if(languages!=null&& !languages.isEmpty())
+            languageList = languages.split(",").clone();
+        List<MovieRow> movieRows = movieService.categorySearch(tagList, languageList);
+        System.out.println("movieRows: " + movieRows);
         return Result.success(movieRows);
     }
 
@@ -82,6 +81,7 @@ public class MovieController {
     // 电影详情
     @GetMapping("/{id}")
     public Result<MovieDTO> movieDetails(@PathVariable Integer id){
+        log.info("getting movie details with id: {}", id);
         MovieDTO movieDTO = movieService.getMovieDetails(id);
         return Result.success(movieDTO);
     }
@@ -119,6 +119,7 @@ public class MovieController {
     // 登出
     @PostMapping("/logout")
     public Result logout(HttpSession session) {
+        log.info("logging out");
         session.invalidate();
         return Result.success();
     }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -86,12 +87,16 @@ public class MovieServiceImpl implements MovieService {
             throw new RuntimeException("分类和语言至少有一个不为空");
         }
         // 处理各种情况
+        System.out.println(tags.length);
         if (languages == null || languages.length == 0) {
             // 通过 all 查询满足多个标签的结果
+            System.out.println("第一个");
             query.addCriteria(Criteria.where("tags").all((Object[]) tags));
         } else if (tags == null || tags.length == 0) {
+            System.out.println("languages: " + Arrays.toString(languages));
             query.addCriteria(Criteria.where("languages").all((Object[]) languages));
         } else {
+            System.out.println("第三个 tags: " + Arrays.toString(tags));
             query.addCriteria(new Criteria().andOperator(
                     Criteria.where("tags").all((Object[]) tags),
                     Criteria.where("languages").all((Object[]) languages)
@@ -131,6 +136,7 @@ public class MovieServiceImpl implements MovieService {
             BeanUtils.copyProperties(movie, movieRow);
             movieRows.add(movieRow);
         }
+        System.out.println(movieRows);
         return movieRows;
     }
 }
