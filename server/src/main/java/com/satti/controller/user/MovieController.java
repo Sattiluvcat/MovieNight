@@ -5,6 +5,7 @@ import com.satti.result.PageResult;
 import com.satti.service.MailService;
 import com.satti.service.MovieService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class MovieController {
         return Result.success();
     }
 
-    // TODO 00th: 电影分页查询 check again
+    // TODO 00th: 电影分页查询 前端懒得实现
     @GetMapping("/page")
     public PageResult paginatedSearch(@RequestParam List<MovieRow> movieRows,
                                                       @RequestParam int page,
@@ -68,27 +69,36 @@ public class MovieController {
         String[] tagList = null;
         String[] languageList = null;
         // 此处不能直接split(",") 会造成空字符串问题（length!=0）
-        if(tags!=null&& !tags.isEmpty())
+        if(!tags.isEmpty())
             tagList = tags.split(",").clone();
-        if(languages!=null&& !languages.isEmpty())
+        if(!languages.isEmpty())
             languageList = languages.split(",").clone();
         List<MovieRow> movieRows = movieService.categorySearch(tagList, languageList);
-        System.out.println("movieRows: " + movieRows);
         return Result.success(movieRows);
     }
 
+    @GetMapping("/suggest")
+    public Result<List<MovieRow>> getSuggestedMovies() {
+        log.info("getting suggested movies");
+        List<MovieRow> movieRows = movieService.getSuggestedMovies();
+        return Result.success(movieRows);
+    }
 
     // 电影详情
-    @GetMapping("/{id}")
-    public Result<MovieDTO> movieDetails(@PathVariable Integer id){
-        log.info("getting movie details with id: {}", id);
+    @GetMapping("/{_id}")
+    public Result<MovieDTO> movieDetails(@PathVariable String _id){
+        log.info("getting movie details with id: {}", _id);
+        // 不判断数字 直接转换（前端限制）
+        Integer id = Integer.parseInt(_id);
         MovieDTO movieDTO = movieService.getMovieDetails(id);
+//        System.out.println(movieDTO.getSummary());
         return Result.success(movieDTO);
     }
 
     // 一起看
     @PostMapping("/{id}/watch-together")
     public Result watchTogether(@PathVariable Integer id, HttpSession session) {
+        log.info("watching together with movie id: {}", id);
         UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
         if (userInfo == null) {
             return Result.failure("请登录后再操作噢");

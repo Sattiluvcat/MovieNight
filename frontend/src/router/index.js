@@ -4,6 +4,7 @@ import LoginView from '../views/LoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import TagsSearchView from '@/views/TagsSearchView.vue'
 import SearchResultsView from '@/views/SearchResultsView.vue'
+import MovieDetailView from '@/views/MovieDetailView.vue';
 
 const routes = [
   {
@@ -26,6 +27,12 @@ const routes = [
     name: 'SearchResults',
     component: SearchResultsView,
     props: route => ({ movies: route.params.movies })
+  },
+  {
+    path: '/movie/:_id',
+    name: 'MovieDetail',
+    component: MovieDetailView,
+    props: true
   }
 ]
 

@@ -8,7 +8,8 @@
     <hr class="divider">
     <div class="languages-container">
       <label>语言</label>
-      <button v-for="language in languages" :key="language" @click="toggleLanguage(language)" :class="{ selected: selectedLanguages.includes(language) }">{{ language }}</button>
+      <button v-for="language in languages" :key="language" @click="toggleLanguage(language)"
+              :class="{ selected: selectedLanguages.includes(language) }">{{ language }}</button>
     </div>
     <button @click="searchByTagsAndLanguages" class="search-button">搜索</button>
   </div>

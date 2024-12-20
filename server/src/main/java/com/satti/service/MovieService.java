@@ -18,4 +18,6 @@ public interface MovieService {
 //    String commentWithTitle(Integer id, String comment);
 
     String getTitle(Integer id);
+
+    List<MovieRow> getSuggestedMovies();
 }

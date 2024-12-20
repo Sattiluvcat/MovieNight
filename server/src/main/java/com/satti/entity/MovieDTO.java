@@ -14,4 +14,5 @@ public class MovieDTO {
     private Movie movie;
     private String score_official;
     private String cover_url;
+    private String summary;
 }
