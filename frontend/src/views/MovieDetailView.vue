@@ -14,6 +14,7 @@
         <h1 class="movie-title">{{ movie.title }}</h1>
         <p class="movie-director">导演: {{ movie.director }}</p>
         <p class="movie-duration">时长: {{ movie.duration }}</p>
+          <p class="movie-actors">演员: {{ movie.actor_actresses.join(', ') }}</p>
       </div>
       <div class="right-column">
         <p class="movie-score-official">豆瓣评分: {{ score_official }}</p>
@@ -22,11 +23,10 @@
       </div>
     </div>
     <div class="bottom-section">
-<!--     TODO  把演员挪到上面去-->
-      <p class="movie-actors">演员: {{ movie.actor_actresses.join(', ') }}</p>
-      <p class="movie-tags">标签: {{ movie.tags.join(', ') }}</p>
-      <p class="movie-languages">语言: {{ movie.languages.join(', ') }}</p>
-      <p class="movie-summary preserve-whitespace">简介: {{ summary }}</p>
+<!--    把演员挪到上面-->
+      <p class="movie-tags">  {{ movie.tags.join(', ') }}</p>
+      <p class="movie-languages">  {{ movie.languages.join(', ') }}</p>
+      <p class="movie-summary preserve-whitespace">  {{ summary }}</p>
       <div class="comment-section">
         <input v-model="comment" placeholder="看过了？请跟Satti分享评论😸" class="comment-input" />
         <button @click="sendComment" class="send-comment-button">发送评论</button>
@@ -155,7 +155,7 @@ export default {
   flex-direction: column;
   align-items: center;
   margin-top: 10px;
-  padding: 0 50px 100px;
+  padding: 0 50px 200px;
   background-color: #f8f6f6;
 }
 
@@ -204,7 +204,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 88%;
+  width: 83%;
   margin-top: 20px;
   //padding-left: 20px;
   border: 2px solid #ccc; /* 添加边框 */
@@ -212,7 +212,6 @@ export default {
   padding: 10px; /* 添加内边距 */
 }
 
-.movie-actors,
 .movie-tags,
 .movie-languages,
 .movie-summary {
@@ -221,6 +220,30 @@ export default {
   margin: 0 0 10px;
   text-align: left;
   letter-spacing: 0.1em;
+}
+
+.movie-tags::before,
+.movie-languages::before,
+.movie-summary::before {
+  font-weight: bold;
+}
+
+.movie-tags::before {
+  content: "标签: ";
+}
+
+.movie-languages::before {
+  content: "语言: ";
+}
+
+.movie-summary::before {
+  content: "简介: ";
+}
+
+.movie-actors {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .movie-cover {
@@ -244,6 +267,24 @@ export default {
 .movie-score-mine {
   font-size: 16px;
   margin-bottom: 10px;
+}
+
+.movie-director::before,
+.movie-duration::before,
+.movie-actors::before {
+  font-weight: bold;
+}
+
+.movie-director::before {
+  content: "导演: ";
+}
+
+.movie-duration::before {
+  content: "时长: ";
+}
+
+.movie-actors::before {
+  content: "演员: ";
 }
 
 .movie-score-official,

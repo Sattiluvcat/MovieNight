@@ -1,7 +1,10 @@
 <template>
   <div class="home">
+    <div class="typing-effect">
+      <p class="typing-text">Select one for movie night</p>
+    </div>
     <div class="search-container">
-      <input type="text" v-model="searchKeyword" placeholder="搜索电影名 / 导演 / 演员" class="search-box">
+      <input type="text" v-model="searchKeyword" placeholder="输入电影名 / 导演 / 演员" class="search-box">
       <button @click="searchByKeyword" class="search-button">搜索😘</button>
     </div>
     <div class="category-search-container">
@@ -81,11 +84,47 @@ export default {
 </script>
 
 <style scoped>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 .home {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.typing-effect {
+  text-align: center;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.typing-text {
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Technic';
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: .15em solid #b06767;
+  max-width: 22.5ch;
+  animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #b06767; }
 }
 
 .search-container {
