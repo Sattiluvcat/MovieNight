@@ -40,7 +40,7 @@ public class MovieController {
         return Result.success();
     }
 
-    // TODO 00th: 电影分页查询 前端懒得实现
+    // 00th: 电影分页查询 前端懒得实现
     @GetMapping("/page")
     public PageResult paginatedSearch(@RequestParam List<MovieRow> movieRows,
                                                       @RequestParam int page,
@@ -77,6 +77,13 @@ public class MovieController {
         return Result.success(movieRows);
     }
 
+    @GetMapping("/find-all")
+    public Result<List<MovieRow>> getAllMovies() {
+        log.info("getting all movies");
+        List<MovieRow> movieRows = movieService.getAllMovies();
+        return Result.success(movieRows);
+    }
+
     @GetMapping("/suggest")
     public Result<List<MovieRow>> getSuggestedMovies() {
         log.info("getting suggested movies");
@@ -99,7 +106,7 @@ public class MovieController {
     @PostMapping("/{id}/watch-together")
     public Result watchTogether(@PathVariable Integer id, HttpSession session) {
         log.info("watching together with movie id: {}", id);
-        UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
+        /*UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
         if (userInfo == null) {
             return Result.failure("请登录后再操作噢");
         }
@@ -107,23 +114,32 @@ public class MovieController {
         String emailContent = String.format("用户 %s (%s) 邀请你一起看: %s\n联系方式: %s",
                 userInfo.getNickname(), userInfo.getTitle(), title, userInfo.getContact());
         System.out.println(emailContent);
-        mailService.sendSimpleMail("***@foxmail.com", "一起看电影", emailContent);
-        return Result.success();
+        mailService.sendSimpleMail("***@foxmail.com", "一起看电影", emailContent);*/
+        boolean flag=movieService.watchTogetherWithTitle(id, session);
+        if (!flag)
+            return Result.failure("请登录后再操作噢");
+        else
+            return Result.success();
     }
 
 
     // 评论——和一起看一样，没准备放到数据库里(暂时)
     @PostMapping("/{id}/comment")
     public Result comment(@PathVariable Integer id, @RequestBody String comment, HttpSession session) {
-        UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
+        /*UserInfo userInfo = (UserInfo) session.getAttribute("userInfo");
         if (userInfo == null) {
             return Result.failure("请登录后再操作噢");
         }
         String title = movieService.getTitle(id);
         String emailContent = String.format("用户 %s (%s) 对电影: %s\n发布了评论: %s\n联系方式: %s",
                 userInfo.getNickname(), userInfo.getTitle(), title, comment, userInfo.getContact());
-        mailService.sendSimpleMail("***@foxmail.com", "电影评论", emailContent);
-        return Result.success();
+        mailService.sendSimpleMail("***@foxmail.com", "电影评论", emailContent);*/
+        log.info("commenting on movie id: {}", id);
+        boolean flag=movieService.commentWithTitle(id, comment, session);
+        if (!flag)
+            return Result.failure("请登录后再操作噢");
+        else
+            return Result.success();
     }
 
     // 登出

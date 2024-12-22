@@ -30,4 +30,8 @@ export const sendComment = (_id, comment) => {
 
 export const getSuggestedMovies = () => {
     return axios.get(`${API_URL}/suggest`);
-};
+}
+
+export const getAllMovies = () => {
+    return axios.get(`${API_URL}/find-all`);
+}

@@ -1,6 +1,7 @@
 <template>
   <div class="search-results">
     <p class="header-message">这里是所有搜索结果😁</p>
+    <p class="results-info">共找到 {{ movies.length }} 条记录，本页有 {{ paginatedMovies.length }} 条记录😁</p>
     <div v-if="movies && movies.length > 0">
       <div v-for="movie in paginatedMovies" :key="movie._id" class="movie-item" @click="goToMovieDetail(movie._id)">
         <div class="movie-header">
@@ -110,6 +111,16 @@ export default {
 .header-message {
   font-size: 26px;
   font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.results-info {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.page-info {
+  font-size: 16px;
   margin-bottom: 20px;
 }
 

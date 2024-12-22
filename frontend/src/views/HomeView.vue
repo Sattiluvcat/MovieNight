@@ -8,6 +8,7 @@
       <button @click="searchByKeyword" class="search-button">搜索😘</button>
     </div>
     <div class="category-search-container">
+      <button @click="fetchAllMovies" class="view-all-button">查看全部电影😎</button>
       <button @click="goToTagsSearch" class="category-search-button">通过标签搜索😎</button>
     </div>
     <div class="recommendation-header">
@@ -36,7 +37,7 @@
 </template>
 
 <script>
-import { getSuggestedMovies, searchMovies } from "@/services/api";
+import { getSuggestedMovies, searchMovies,getAllMovies } from "@/services/api";
 import { mapActions } from "vuex";
 
 export default {
@@ -55,6 +56,18 @@ export default {
       }
       try {
         const response = await searchMovies(this.searchKeyword);
+        const movies = response.data.data;
+        this.updateMovies(movies);
+        this.$router.push({ name: 'SearchResults' });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    ...mapActions(['updateMovies']),
+    async fetchAllMovies() {
+      try {
+        const response = await getAllMovies();
+        console.log(response);
         const movies = response.data.data;
         this.updateMovies(movies);
         this.$router.push({ name: 'SearchResults' });
@@ -155,7 +168,24 @@ html, body {
 }
 
 .category-search-container {
+  display: flex;
+  align-items: center;
   margin-top: 20px;
+}
+
+.view-all-button {
+  padding: 20px 30px;
+  font-size: 20px;
+  background-color: #b79292;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 40px;
+}
+
+.view-all-button:hover {
+  background-color: #883333;
 }
 
 .category-search-button {

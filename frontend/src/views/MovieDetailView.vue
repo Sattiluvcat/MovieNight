@@ -12,9 +12,9 @@
           </div>
         <div class="middle-column">
         <h1 class="movie-title">{{ movie.title }}</h1>
-        <p class="movie-director">导演: {{ movie.director }}</p>
-        <p class="movie-duration">时长: {{ movie.duration }}</p>
-          <p class="movie-actors">演员: {{ movie.actor_actresses.join(', ') }}</p>
+        <p class="movie-director"> {{ movie.director }}</p>
+        <p class="movie-duration"> {{ movie.duration }}</p>
+          <p class="movie-actors"> {{ movie.actor_actresses.join(', ') }}</p>
       </div>
       <div class="right-column">
         <p class="movie-score-official">豆瓣评分: {{ score_official }}</p>

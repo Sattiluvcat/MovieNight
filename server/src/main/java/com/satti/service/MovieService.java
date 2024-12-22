@@ -2,6 +2,7 @@ package com.satti.service;
 
 import com.satti.entity.MovieDTO;
 import com.satti.entity.MovieRow;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -20,4 +21,10 @@ public interface MovieService {
     String getTitle(Integer id);
 
     List<MovieRow> getSuggestedMovies();
+
+    List<MovieRow> getAllMovies();
+
+    boolean watchTogetherWithTitle(Integer id, HttpSession session);
+
+    boolean commentWithTitle(Integer id, String comment, HttpSession session);
 }
