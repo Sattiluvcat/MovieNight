@@ -4,7 +4,13 @@
       <p class="typing-text">Select one for movie night</p>
     </div>
     <div class="search-container">
-      <input type="text" v-model="searchKeyword" placeholder="输入电影名 / 导演 / 演员" class="search-box">
+      <input
+          type="text"
+          v-model="searchKeyword"
+          @keydown="handleKeydown"
+          placeholder="输入电影名 / 导演 / 演员"
+          class="search-box"
+      />
       <button @click="searchByKeyword" class="search-button">搜索😘</button>
     </div>
     <div class="category-search-container">
@@ -37,7 +43,7 @@
 </template>
 
 <script>
-import { getSuggestedMovies, searchMovies,getAllMovies } from "@/services/api";
+import { getSuggestedMovies, searchMovies, getAllMovies } from "@/services/api";
 import { mapActions } from "vuex";
 
 export default {
@@ -63,7 +69,6 @@ export default {
         console.error(error);
       }
     },
-    ...mapActions(['updateMovies']),
     async fetchAllMovies() {
       try {
         const response = await getAllMovies();
@@ -88,6 +93,11 @@ export default {
     },
     goToMovieDetail(_id) {
       this.$router.push({ name: 'MovieDetail', params: { _id } });
+    },
+    handleKeydown(event) {
+      if (event.key === 'Enter') {
+        this.searchByKeyword();
+      }
     }
   },
   created() {

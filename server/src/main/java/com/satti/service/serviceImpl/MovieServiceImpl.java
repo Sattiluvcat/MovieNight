@@ -4,12 +4,13 @@ import com.satti.entity.Movie;
 import com.satti.entity.MovieDTO;
 import com.satti.entity.MovieRow;
 import com.satti.entity.UserInfo;
-import com.satti.result.Result;
 import com.satti.service.MailService;
 import com.satti.service.MovieService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -60,7 +61,7 @@ public class MovieServiceImpl implements MovieService {
             // Split the result into parts
             if(result.equals("Error")) {
                 movieDTO.setScore_official("暂无评分");
-                movieDTO.setCover_url("暂无图片");
+                movieDTO.setCover_url("");
                 movieDTO.setSummary("暂无简介");
                 throw new RuntimeException("调取信息失败");
             }
@@ -117,17 +118,6 @@ public class MovieServiceImpl implements MovieService {
         return findMovieRow(query);
     }
 
-    /*@Override
-    public String watchTogetherWithTitle(Integer id) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(id));
-        Movie movie = mongoTemplate.findOne(query, Movie.class);
-        if (movie == null) {
-            throw new RuntimeException("电影不存在");
-        }
-        return movie.getTitle();
-    }*/
-
     @Override
     public String getTitle(Integer id) {
         Movie movie = mongoTemplate.findById(id, Movie.class);
@@ -182,6 +172,8 @@ public class MovieServiceImpl implements MovieService {
             return false;
         }
         String title = getTitle(id);
+        String info = comment.substring(12, comment.length()-2);
+        System.out.println(info);
         String emailContent = String.format("用户 %s (%s) 对电影: %s\n发布了评论: %s\n联系方式: %s",
                 userInfo.getNickname(), userInfo.getTitle(), title, comment, userInfo.getContact());
         mailService.sendSimpleMail("***@foxmail.com", "电影评论", emailContent);

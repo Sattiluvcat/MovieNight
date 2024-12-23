@@ -7,15 +7,15 @@
     <form @submit.prevent="login">
       <div class="form-group">
         <label for="username">用户名：</label>
-        <input type="text" v-model="username" required>
+        <input type="text" v-model="username" @keydown="handleKeydown" required>
       </div>
       <div class="form-group">
         <label for="title">称呼：</label>
-        <input type="text" v-model="title" required>
+        <input type="text" v-model="title" @keydown="handleKeydown" required>
       </div>
       <div class="form-group">
         <label for="email">邮箱：</label>
-        <input type="email" v-model="email" required>
+        <input type="email" v-model="email" @keydown="handleKeydown" required>
       </div>
     </form>
     <button class="submit-button" @click="login">进入主页</button>
@@ -54,6 +54,11 @@ export default {
       } catch (error) {
         console.error(error)
         alert('出错了！请重试~')
+      }
+    },
+    handleKeydown(event) {
+      if (event.key === 'Enter') {
+        this.login();
       }
     }
   }

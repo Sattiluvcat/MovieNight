@@ -5,37 +5,36 @@
       <p class="beautify-text">Welcome to the Movie Detail Page!🤩</p>
       <hr class="beautify-line" />
     </div>
-      <div v-if="movie" class="movie-detail">
-        <div class="top-section">
-          <div class="left-column">
-            <img referrerpolicy="no-referrer" :src="cover_url" alt="Movie Cover" class="movie-cover" />
-          </div>
+    <div v-if="movie" class="movie-detail">
+      <div class="top-section">
+        <div class="left-column">
+          <img referrerpolicy="no-referrer" :src="cover_url" alt="Movie Cover" class="movie-cover" />
+        </div>
         <div class="middle-column">
-        <h1 class="movie-title">{{ movie.title }}</h1>
-        <p class="movie-director"> {{ movie.director }}</p>
-        <p class="movie-duration"> {{ movie.duration }}</p>
-          <p class="movie-actors"> {{ movie.actor_actresses.join(', ') }}</p>
+          <h1 class="movie-title">{{ movie.title }}</h1>
+          <p class="movie-director">{{ movie.director }}</p>
+          <p class="movie-duration">{{ movie.duration }}</p>
+          <p class="movie-actors">{{ movie.actor_actresses.join(', ') }}</p>
+        </div>
+        <div class="right-column">
+          <p class="movie-score-official">豆瓣评分: {{ score_official }}</p>
+          <p class="movie-score-mine">我的评分: {{ movie.star_mine }} / 5</p>
+          <button @click="watchTogether" class="watch-together-button">一起看</button>
+        </div>
       </div>
-      <div class="right-column">
-        <p class="movie-score-official">豆瓣评分: {{ score_official }}</p>
-        <p class="movie-score-mine">我的评分: {{ movie.star_mine }} / 5</p>
-        <button @click="watchTogether" class="watch-together-button">一起看</button>
+      <div class="bottom-section">
+        <p class="movie-tags">{{ movie.tags.join(', ') }}</p>
+        <p class="movie-languages">{{ movie.languages.join(', ') }}</p>
+        <p class="movie-summary preserve-whitespace">{{ summary }}</p>
+        <div class="comment-section">
+          <input v-model="comment" @keydown="handleKeydown" placeholder="看过了？请跟Satti分享评论😸（按下Enter就会发送噢）" class="comment-input" />
+          <button @click="sendComment" class="send-comment-button">发送评论</button>
+        </div>
       </div>
     </div>
-    <div class="bottom-section">
-<!--    把演员挪到上面-->
-      <p class="movie-tags">  {{ movie.tags.join(', ') }}</p>
-      <p class="movie-languages">  {{ movie.languages.join(', ') }}</p>
-      <p class="movie-summary preserve-whitespace">  {{ summary }}</p>
-      <div class="comment-section">
-        <input v-model="comment" placeholder="看过了？请跟Satti分享评论😸" class="comment-input" />
-        <button @click="sendComment" class="send-comment-button">发送评论</button>
-      </div>
+    <div v-else>
+      加载中 请稍候😣
     </div>
-  </div>
-  <div v-else>
-    加载中 请稍候😣
-  </div>
   </div>
 </template>
 
@@ -49,7 +48,7 @@ export default {
       movie: null,
       cover_url: '',
       score_official: '',
-      summary:'',
+      summary: '',
       comment: ''
     }
   },
@@ -71,7 +70,7 @@ export default {
       try {
         const response = await watchTogether(this._id);
         console.log('一起看 响应:', response);
-        if (response.data.code===0)
+        if (response.data.code === 0)
           alert('请登录后再发送噢');
         else
           alert('已向Satti发送一起看邀请');
@@ -83,13 +82,18 @@ export default {
       try {
         const response = await sendComment(this._id, this.comment);
         console.log('发送评论 响应:', response);
-        if (response.data.code==='0')
+        if (response.data.code === '0')
           alert('请登录后再发送噢');
         else
           alert('已向Satti发送电影评论');
         this.comment = ''; // Clear the input after sending the comment
       } catch (error) {
         console.error('发送评论功能出错了:', error);
+      }
+    },
+    handleKeydown(event) {
+      if (event.key === 'Enter') {
+        this.sendComment();
       }
     }
   }

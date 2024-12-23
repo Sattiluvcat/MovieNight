@@ -1,8 +1,8 @@
 <template>
   <div class="search-results">
     <p class="header-message">这里是所有搜索结果😁</p>
-    <p class="results-info">共找到 {{ movies.length }} 条记录，本页有 {{ paginatedMovies.length }} 条记录😁</p>
     <div v-if="movies && movies.length > 0">
+      <p class="results-info">本页为第 {{  movies.length === 0 ? 0 :(currentPage-1)*10+1 }} - {{  movies.length === 0 ? 0 :(currentPage-1)*10+paginatedMovies.length }} 条记录，共找到 {{ movies.length }} 条记录😁</p>
       <div v-for="movie in paginatedMovies" :key="movie._id" class="movie-item" @click="goToMovieDetail(movie._id)">
         <div class="movie-header">
           <h2 class="movie-title">{{ movie.title }}</h2>
